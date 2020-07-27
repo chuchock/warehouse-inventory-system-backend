@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wisys", "wisys\wisys.csproj", "{EF49C36B-FCF0-4CF6-B3C7-B7C989D98F46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wisys.tests", "wisys.tests\wisys.tests.csproj", "{5AFDA419-C925-450B-8F50-CDBAC4E72CEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF49C36B-FCF0-4CF6-B3C7-B7C989D98F46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF49C36B-FCF0-4CF6-B3C7-B7C989D98F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF49C36B-FCF0-4CF6-B3C7-B7C989D98F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF49C36B-FCF0-4CF6-B3C7-B7C989D98F46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AFDA419-C925-450B-8F50-CDBAC4E72CEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AFDA419-C925-450B-8F50-CDBAC4E72CEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AFDA419-C925-450B-8F50-CDBAC4E72CEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AFDA419-C925-450B-8F50-CDBAC4E72CEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {103662A2-7E19-47B5-AD7A-03F0D4422BD2}
+	EndGlobalSection
+EndGlobal
