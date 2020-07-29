@@ -6,9 +6,9 @@ using wisys.Entities;
 
 namespace wisys.Services
 {
-	interface IWarehouseRepository
+	public interface IWarehouseRepository
 	{
-		List<WarehouseEntity> GetAllWarehousesAsync();
+		Task<List<WarehouseEntity>> GetAllWarehousesAsync();
 		WarehouseEntity GetWarehouseByIdAsync(int Id);
 		void AddWarehouseAsync(WarehouseEntity warehouse);
 		void UpdateWarehouseAsync(WarehouseEntity warehouse);

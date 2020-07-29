@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using wisys.Entities;
+using wisys.Services;
 
 namespace wisys.Controllers
 {
@@ -10,12 +12,20 @@ namespace wisys.Controllers
 	[Route("api/warehouses")]
 	public class WarehousesController : ControllerBase
 	{
+		private readonly IWarehouseRepository repository;
+
+		public WarehousesController(IWarehouseRepository repository)
+		{
+			this.repository = repository;
+		}
 
 		// api/warehouses
 		[HttpGet]
-		public ActionResult Get()
+		public async Task<ActionResult<List<WarehouseEntity>>> Get()
 		{
-			return NotFound();
+			var warehouses = await repository.GetAllWarehousesAsync();
+
+			return warehouses;
 		}
 
 		// api/warehouses/{Id}
