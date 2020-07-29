@@ -3,45 +3,79 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using wisys.Entities;
+using wisys.Services;
 
 namespace wisys.Controllers
 {
 	[Route("api/products")]
 	public class ProductsController : ControllerBase
 	{
+		private readonly IProductRepository repository;
+
+		public ProductsController(IProductRepository repository)
+		{
+			this.repository = repository;
+		}
+
 		// api/products
 		[HttpGet]
-		public ActionResult Get()
+		public async Task<ActionResult<List<ProductEntity>>> Get()
 		{
-			return NotFound();
+			var products = await repository.GetAllProductsAsync();
+
+			return products;
 		}
 
 		// api/products/{Id}
-		[HttpGet("{Id}")]
-		public ActionResult Get(int Id)
+		[HttpGet("{id}")]
+		public async Task<ActionResult<ProductEntity>> Get(int id)
 		{
-			return NotFound();
+			var product = await repository.GetProductByIdAsync(id);
+
+			if (product == null)
+			{
+				return NotFound();
+			}
+
+			return product;
 		}
 
 		// api/products
 		[HttpPost]
-		public ActionResult Post()
+		public async Task<ActionResult> Post(ProductEntity product)
 		{
-			return NotFound();
+			await repository.AddProductAsync(product);
+
+			return NoContent();
 		}
 
 		// api/products
-		[HttpPut]
-		public ActionResult Put()
+		[HttpPut("{id}")]
+		public async Task<ActionResult> Put(int id, ProductEntity product)
 		{
-			return NotFound();
+			var exists = await repository.GetProductByIdAsync(id);
+
+			if (exists == null)
+				return NotFound();
+
+			await repository.UpdateProductAsync(id, product);
+
+			return NoContent();
 		}
 
 		// api/products/{Id}
-		[HttpDelete]
-		public ActionResult Delete()
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> Delete(int id)
 		{
-			return NotFound();
+			var exists = await repository.GetProductByIdAsync(id);
+
+			if (exists == null)
+				return NotFound();
+
+			await repository.DeleteProductAsync(id);
+
+			return NoContent();
 		}
 	}
 }

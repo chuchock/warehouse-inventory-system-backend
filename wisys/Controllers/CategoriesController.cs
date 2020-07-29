@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using wisys.Entities;
+using wisys.Services;
 
 namespace wisys.Controllers
 {
@@ -10,39 +12,71 @@ namespace wisys.Controllers
 	[Route("api/categories")]
 	public class CategoriesController : ControllerBase
 	{
-		// api/products
-		[HttpGet]
-		public ActionResult Get()
+		private readonly ICategoryRepository repository;
+
+		public CategoriesController(ICategoryRepository repository)
 		{
-			return NotFound();
+			this.repository = repository;
+		}
+
+		// api/categories
+		[HttpGet]
+		public async Task<ActionResult<List<CategoryEntity>>> Get()
+		{
+			var categories = await repository.GetAllCategoriesAsync();
+
+			return categories;
 		}
 
 		// api/categories/{Id}
-		[HttpGet("{Id}")]
-		public ActionResult Get(int Id)
+		[HttpGet("{id}")]
+		public async Task<ActionResult<CategoryEntity>> Get(int id)
 		{
-			return NotFound();
+			var category = await repository.GetCategoryByIdAsync(id);
+
+			if (category == null)
+			{
+				return NotFound();
+			}
+
+			return category;
 		}
 
 		// api/categories
 		[HttpPost]
-		public ActionResult Post()
+		public async Task<ActionResult> Post(CategoryEntity category)
 		{
-			return NotFound();
+			await repository.AddCategoryAsync(category);
+
+			return NoContent();
 		}
 
 		// api/categories
-		[HttpPut]
-		public ActionResult Put()
+		[HttpPut("{id}")]
+		public async Task<ActionResult> Put(int id, CategoryEntity category)
 		{
-			return NotFound();
+			var exists = await repository.GetCategoryByIdAsync(id);
+
+			if (exists == null)
+				return NotFound();
+
+			await repository.UpdateCategoryAsync(id, category);
+
+			return NoContent();
 		}
 
 		// api/categories/{Id}
-		[HttpDelete]
-		public ActionResult Delete()
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> Delete(int id)
 		{
-			return NotFound();
+			var exists = await repository.GetCategoryByIdAsync(id);
+
+			if (exists == null)
+				return NotFound();
+
+			await repository.DeleteCategoryAsync(id);
+
+			return NoContent();
 		}
 	}
 }

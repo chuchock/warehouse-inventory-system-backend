@@ -42,7 +42,6 @@ namespace wisys.Services
 
 		public async Task UpdateWarehouseAsync(int id, WarehouseEntity warehouse)
 		{
-			//_dbContext.Warehouses.Update(warehouse);
 			warehouse.WarehouseId = id;
 			_dbContext.Entry(warehouse).State = EntityState.Modified;
 

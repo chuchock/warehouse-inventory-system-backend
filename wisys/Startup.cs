@@ -33,6 +33,8 @@ namespace wisys
 			services.AddDbContext<AppDbContext>(options => options.UseNpgsql(sqlConnectionString));
 
 			services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+			services.AddScoped<ICategoryRepository, CategoryRepository>();
+			services.AddScoped<IProductRepository, ProductRepository>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
