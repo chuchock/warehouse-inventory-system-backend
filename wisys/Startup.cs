@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using wisys.Data;
 using wisys.Services;
 
 namespace wisys
@@ -26,7 +28,11 @@ namespace wisys
 		{
 			services.AddControllers();
 
-			services.AddSingleton<IWarehouseRepository, WarehouseRepository>();
+			var sqlConnectionString = Configuration["ConnectionStrings:PostgreSqlConnectionString"];
+
+			services.AddDbContext<AppDbContext>(options => options.UseNpgsql(sqlConnectionString));
+
+			services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

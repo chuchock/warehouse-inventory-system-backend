@@ -13,9 +13,9 @@ namespace wisys.Data
 		{
 		}
 
-		public DbSet<WarehouseEntity> warehouses { get; set; }
-		public DbSet<CategoryEntity> categories { get; set; }
-		public DbSet<ProductEntity> products { get; set; }
-		public DbSet<StorageEntity> storages { get; set; }
+		public DbSet<WarehouseEntity> Warehouses { get; set; }
+		public DbSet<CategoryEntity> Categories { get; set; }
+		public DbSet<ProductEntity> Products { get; set; }
+		public DbSet<StorageEntity> Storages { get; set; }
 	}
 }
