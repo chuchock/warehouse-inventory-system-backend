@@ -17,14 +17,17 @@ namespace wisys.Services
 			_dbContext = context;
 		}
 
-		public void AddWarehouseAsync(WarehouseEntity warehouse)
+		public async Task AddWarehouseAsync(WarehouseEntity warehouse)
 		{
-			throw new NotImplementedException();
+			await _dbContext.Warehouses.AddAsync(warehouse);
+			await _dbContext.SaveChangesAsync();
 		}
 
-		public void DeleteWarehouseAsync(int Id)
+		public async Task DeleteWarehouseAsync(int id)
 		{
-			throw new NotImplementedException();
+
+			_dbContext.Warehouses.Remove(new WarehouseEntity() { WarehouseId = id });
+			await _dbContext.SaveChangesAsync();
 		}
 
 		public async Task<List<WarehouseEntity>> GetAllWarehousesAsync()
@@ -32,12 +35,12 @@ namespace wisys.Services
 			return await _dbContext.Warehouses.ToListAsync();
 		}
 
-		public WarehouseEntity GetWarehouseByIdAsync(int Id)
+		public async Task<WarehouseEntity> GetWarehouseByIdAsync(int id)
 		{
-			throw new NotImplementedException();
+			return await _dbContext.Warehouses.FirstOrDefaultAsync(x => x.WarehouseId == id);
 		}
 
-		public void UpdateWarehouseAsync(WarehouseEntity warehouse)
+		public async Task UpdateWarehouseAsync(WarehouseEntity warehouse)
 		{
 			throw new NotImplementedException();
 		}

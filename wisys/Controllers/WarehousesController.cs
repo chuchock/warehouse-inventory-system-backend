@@ -10,6 +10,7 @@ namespace wisys.Controllers
 {
 
 	[Route("api/warehouses")]
+	[ApiController]
 	public class WarehousesController : ControllerBase
 	{
 		private readonly IWarehouseRepository repository;
@@ -29,17 +30,26 @@ namespace wisys.Controllers
 		}
 
 		// api/warehouses/{Id}
-		[HttpGet("{Id}")]
-		public ActionResult Get(int Id)
+		[HttpGet("{id}")]
+		public async Task<ActionResult<WarehouseEntity>> Get(int id)
 		{
-			return NotFound();
+			var warehouse = await repository.GetWarehouseByIdAsync(id);
+
+			if (warehouse == null)
+			{
+				return NotFound();
+			}
+
+			return warehouse;
 		}
 
 		// api/warehouses
 		[HttpPost]
-		public ActionResult Post()
+		public async Task<ActionResult> Post(WarehouseEntity warehouse)
 		{
-			return NotFound();
+			await repository.AddWarehouseAsync(warehouse);
+
+			return NoContent();
 		}
 
 		// api/warehouses
@@ -50,10 +60,17 @@ namespace wisys.Controllers
 		}
 
 		// api/warehouses/{Id}
-		[HttpDelete]
-		public ActionResult Delete()
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> Delete(int Id)
 		{
-			return NotFound();
+			var exists = await repository.GetWarehouseByIdAsync(Id);
+
+			if (exists == null)
+				return NotFound();
+
+			await repository.DeleteWarehouseAsync(Id);
+
+			return NoContent();
 		}
 	}
 }
