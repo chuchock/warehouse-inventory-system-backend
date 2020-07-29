@@ -40,9 +40,13 @@ namespace wisys.Services
 			return await _dbContext.Warehouses.FirstOrDefaultAsync(x => x.WarehouseId == id);
 		}
 
-		public async Task UpdateWarehouseAsync(WarehouseEntity warehouse)
+		public async Task UpdateWarehouseAsync(int id, WarehouseEntity warehouse)
 		{
-			throw new NotImplementedException();
+			//_dbContext.Warehouses.Update(warehouse);
+			warehouse.WarehouseId = id;
+			_dbContext.Entry(warehouse).State = EntityState.Modified;
+
+			await _dbContext.SaveChangesAsync();
 		}
 	}
 }

@@ -53,22 +53,29 @@ namespace wisys.Controllers
 		}
 
 		// api/warehouses
-		[HttpPut]
-		public ActionResult Put()
+		[HttpPut("{id}")]
+		public async Task<ActionResult> Put(int id, WarehouseEntity warehouse)
 		{
-			return NotFound();
-		}
-
-		// api/warehouses/{Id}
-		[HttpDelete("{id}")]
-		public async Task<ActionResult> Delete(int Id)
-		{
-			var exists = await repository.GetWarehouseByIdAsync(Id);
+			var exists = await repository.GetWarehouseByIdAsync(id);
 
 			if (exists == null)
 				return NotFound();
 
-			await repository.DeleteWarehouseAsync(Id);
+			await repository.UpdateWarehouseAsync(id, warehouse);
+
+			return NoContent();
+		}
+
+		// api/warehouses/{Id}
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> Delete(int id)
+		{
+			var exists = await repository.GetWarehouseByIdAsync(id);
+
+			if (exists == null)
+				return NotFound();
+
+			await repository.DeleteWarehouseAsync(id);
 
 			return NoContent();
 		}

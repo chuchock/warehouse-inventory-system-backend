@@ -9,9 +9,9 @@ namespace wisys.Services
 	public interface IWarehouseRepository
 	{
 		Task<List<WarehouseEntity>> GetAllWarehousesAsync();
-		Task<WarehouseEntity> GetWarehouseByIdAsync(int Id);
+		Task<WarehouseEntity> GetWarehouseByIdAsync(int id);
 		Task AddWarehouseAsync(WarehouseEntity warehouse);
-		Task UpdateWarehouseAsync(WarehouseEntity warehouse);
+		Task UpdateWarehouseAsync(int id, WarehouseEntity warehouse);
 		Task DeleteWarehouseAsync(int Id);
 	}
 }
