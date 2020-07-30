@@ -44,27 +44,29 @@ namespace wisys.Controllers
 
 
 		// api/products/{Id}
-		[HttpGet("{id}")]
-		public async Task<ActionResult<ProductEntity>> Get(int id)
+		[HttpGet("{id}", Name = "getProduct")]
+		public async Task<ActionResult<ProductDTO>> Get(int id)
 		{
 			var product = await repository.GetProductByIdAsync(id);
 
 			if (product == null)
-			{
 				return NotFound();
-			}
 
-			return product;
+			return mapper.Map<ProductDTO>(product);
 		}
 
 
 		// api/products
 		[HttpPost]
-		public async Task<ActionResult> Post(ProductEntity product)
+		public async Task<ActionResult> Post([FromBody] ProductCreationDTO productCreationDTO)
 		{
+			var product = mapper.Map<ProductEntity>(productCreationDTO);
+
 			await repository.AddProductAsync(product);
 
-			return NoContent();
+			var productDTO = mapper.Map<ProductDTO>(product);
+
+			return new CreatedAtRouteResult("getProduct", new { id = product.ProductId }, productDTO);
 		}
 
 

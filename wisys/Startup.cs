@@ -27,7 +27,8 @@ namespace wisys
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
+			services.AddControllers()
+			.AddNewtonsoftJson(); //Add support for HTTP PATCH
 
 			//Add automapper service (automapper dependency)
 			services.AddAutoMapper(typeof(Startup));

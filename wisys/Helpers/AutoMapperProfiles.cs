@@ -14,6 +14,9 @@ namespace wisys.Helpers
 
 			// Products
 			CreateMap<ProductEntity, ProductPatchDTO>().ReverseMap();
+			CreateMap<ProductDTO, ProductEntity>();
+			CreateMap<ProductEntity, ProductCreationDTO>().ReverseMap();
+			CreateMap<ProductEntity, ProductDTO>();
 		}
 	}
 }
