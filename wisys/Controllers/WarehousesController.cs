@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using wisys.DTOs;
 using wisys.Entities;
 using wisys.Services;
 
@@ -14,10 +14,12 @@ namespace wisys.Controllers
 	public class WarehousesController : ControllerBase
 	{
 		private readonly IWarehouseRepository repository;
+		private IMapper mapper;
 
-		public WarehousesController(IWarehouseRepository repository)
+		public WarehousesController(IWarehouseRepository repository, IMapper mapper)
 		{
 			this.repository = repository;
+			this.mapper = mapper;
 		}
 
 		// api/warehouses
@@ -30,7 +32,7 @@ namespace wisys.Controllers
 		}
 
 		// api/warehouses/{Id}
-		[HttpGet("{id}")]
+		[HttpGet("{id}", Name = "getWarehouse")]
 		public async Task<ActionResult<WarehouseEntity>> Get(int id)
 		{
 			var warehouse = await repository.GetWarehouseByIdAsync(id);
@@ -45,11 +47,15 @@ namespace wisys.Controllers
 
 		// api/warehouses
 		[HttpPost]
-		public async Task<ActionResult> Post(WarehouseEntity warehouse)
+		public async Task<ActionResult> Post([FromBody] WarehouseCreationDTO warehouseCreationDTO)
 		{
+			var warehouse = mapper.Map<WarehouseEntity>(warehouseCreationDTO);
+
 			await repository.AddWarehouseAsync(warehouse);
 
-			return NoContent();
+			var warehouseDTO = mapper.Map<WarehouseDTO>(warehouse);
+
+			return new CreatedAtRouteResult("getWarehouse", new { id = warehouse.WarehouseId }, warehouseDTO);
 		}
 
 		// api/warehouses

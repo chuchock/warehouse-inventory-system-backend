@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,9 @@ namespace wisys
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+
+			//Add automapper service (automapper dependency)
+			services.AddAutoMapper(typeof(Startup));
 
 			var sqlConnectionString = Configuration["ConnectionStrings:PostgreSqlConnectionString"];
 
