@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using wisys.Data;
@@ -15,11 +17,13 @@ namespace wisys.Controllers
 	{
 		private readonly AppDbContext dbContext;
 		private readonly IProductRepository repository;
+		private readonly IMapper mapper;
 
 
-		public ProductsController(AppDbContext dbContext, IProductRepository repository)
+		public ProductsController(AppDbContext dbContext, IMapper mapper, IProductRepository repository)
 		{
 			this.repository = repository;
+			this.mapper = mapper;
 			this.dbContext = dbContext;
 		}
 
@@ -74,6 +78,36 @@ namespace wisys.Controllers
 				return NotFound();
 
 			await repository.UpdateProductAsync(id, product);
+
+			return NoContent();
+		}
+
+
+		[HttpPatch("{id}")]
+		public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<ProductPatchDTO> patchDocument)
+		{
+			if (patchDocument == null)
+				return BadRequest();
+
+			var entityFromDB = await dbContext.Products.FirstOrDefaultAsync(x => x.ProductId == id);
+
+			if (entityFromDB == null)
+				return NotFound();
+
+			var entityDTO = mapper.Map<ProductPatchDTO>(entityFromDB);
+
+			patchDocument.ApplyTo(entityDTO, ModelState);
+
+			var isValid = TryValidateModel(entityDTO);
+
+			if (!isValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			mapper.Map(entityDTO, entityFromDB);
+
+			await dbContext.SaveChangesAsync();
 
 			return NoContent();
 		}

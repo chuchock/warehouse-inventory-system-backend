@@ -8,8 +8,12 @@ namespace wisys.Helpers
 	{
 		public AutoMapperProfiles()
 		{
+			//Warehouses
 			CreateMap<WarehouseCreationDTO, WarehouseEntity>();
 			CreateMap<WarehouseEntity, WarehouseDTO>();
+
+			// Products
+			CreateMap<ProductEntity, ProductPatchDTO>().ReverseMap();
 		}
 	}
 }
