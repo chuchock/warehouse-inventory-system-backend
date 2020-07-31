@@ -11,6 +11,7 @@ namespace wisys.Helpers
 			//Warehouses
 			CreateMap<WarehouseCreationDTO, WarehouseEntity>();
 			CreateMap<WarehouseEntity, WarehouseDTO>();
+			CreateMap<WarehouseEntity, WarehousePatchDTO>().ReverseMap();
 
 			// Products
 			CreateMap<ProductEntity, ProductPatchDTO>().ReverseMap();
