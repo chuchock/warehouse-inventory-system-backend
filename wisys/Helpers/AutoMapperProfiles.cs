@@ -13,6 +13,12 @@ namespace wisys.Helpers
 			CreateMap<WarehouseEntity, WarehouseDTO>();
 			CreateMap<WarehouseEntity, WarehousePatchDTO>().ReverseMap();
 
+			//Categories
+			CreateMap<CategoryEntity, CategoryPatchDTO>().ReverseMap();
+			CreateMap<CategoryDTO, CategoryEntity>();
+			CreateMap<CategoryEntity, CategoryCreationDTO>().ReverseMap();
+			CreateMap<CategoryEntity, CategoryDTO>();
+
 			// Products
 			CreateMap<ProductEntity, ProductPatchDTO>().ReverseMap();
 			CreateMap<ProductDTO, ProductEntity>();
