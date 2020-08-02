@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using wisys.Data;
 using wisys.Services;
 
@@ -43,6 +46,21 @@ namespace wisys
 			.AddEntityFrameworkStores<AppDbContext>()
 			.AddDefaultTokenProviders();
 
+			//Add authentication service
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+					.AddJwtBearer(options =>
+						options.TokenValidationParameters = new TokenValidationParameters
+						{
+							ValidateIssuer = false,
+							ValidateAudience = false,
+							ValidateLifetime = true,
+							ValidateIssuerSigningKey = true,
+							IssuerSigningKey = new SymmetricSecurityKey(
+								Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
+							ClockSkew = TimeSpan.Zero
+						}
+					);
+
 			services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 			services.AddScoped<ICategoryRepository, CategoryRepository>();
 			services.AddScoped<IProductRepository, ProductRepository>();
@@ -57,6 +75,7 @@ namespace wisys
 
 			app.UseRouting();
 
+			app.UseAuthorization();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
