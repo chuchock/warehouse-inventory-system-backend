@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,11 @@ namespace wisys
 			var sqlConnectionString = Configuration["ConnectionStrings:PostgreSqlConnectionString"];
 
 			services.AddDbContext<AppDbContext>(options => options.UseNpgsql(sqlConnectionString));
+
+			//Add identity service
+			services.AddIdentity<IdentityUser, IdentityRole>()
+			.AddEntityFrameworkStores<AppDbContext>()
+			.AddDefaultTokenProviders();
 
 			services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 			services.AddScoped<ICategoryRepository, CategoryRepository>();
