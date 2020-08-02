@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace wisys.Controllers
 {
 	[Route("api/storages")]
+	[EnableCors(PolicyName = "AllowAll")]
 	public class StoragesController : ControllerBase
 	{
 		// api/storages

@@ -41,6 +41,21 @@ namespace wisys
 
 			services.AddDbContext<AppDbContext>(options => options.UseNpgsql(sqlConnectionString));
 
+			//Add Cors Service
+			services.AddCors(options =>
+			{
+				//options.AddPolicy("AllowAPIRequestIO",
+				//	builder => builder.WithOrigins("https://apirequest.io").WithMethods("GET", "POST").AllowAnyHeader());
+				options.AddPolicy("AllowAll",
+						builder =>
+						{
+							builder
+							.AllowAnyOrigin()
+							.AllowAnyMethod()
+							.AllowAnyHeader();
+						});
+			});
+
 			//Add identity service
 			services.AddIdentity<IdentityUser, IdentityRole>()
 			.AddEntityFrameworkStores<AppDbContext>()
@@ -77,6 +92,8 @@ namespace wisys
 
 			app.UseAuthorization();
 			app.UseAuthorization();
+
+			app.UseCors();
 
 			app.UseEndpoints(endpoints =>
 			{

@@ -13,6 +13,7 @@ using wisys.Services;
 namespace wisys.Controllers
 {
 	[Route("api/products")]
+	[EnableCors(PolicyName = "AllowAll")]
 	public class ProductsController : ControllerBase
 	{
 		private readonly AppDbContext dbContext;

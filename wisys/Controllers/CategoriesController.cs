@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace wisys.Controllers
 
 	[Route("api/categories")]
 	[ApiController]
+	[EnableCors(PolicyName = "AllowAll")]
 	public class CategoriesController : ControllerBase
 	{
 		private readonly AppDbContext dbContext;

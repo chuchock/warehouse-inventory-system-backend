@@ -16,6 +16,7 @@ namespace wisys.Controllers
 
 	[Route("api/warehouses")]
 	[ApiController]
+	[EnableCors(PolicyName = "AllowAll")]
 	public class WarehousesController : ControllerBase
 	{
 		private readonly AppDbContext dbContext;
