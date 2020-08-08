@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +17,9 @@ using wisys.Services;
 namespace wisys.Controllers
 {
 	[Route("api/products")]
-	[EnableCors(PolicyName = "AllowAll")]
+	[ApiController]
+	//[EnableCors(PolicyName = "AllowAll")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class ProductsController : ControllerBase
 	{
 		private readonly AppDbContext dbContext;
@@ -41,6 +47,14 @@ namespace wisys.Controllers
 			//var products = await repository.GetAllProductsAsync();
 
 			return products;
+		}
+
+
+		// api/products/count
+		[HttpGet("count")]
+		public async Task<ActionResult<int>> Count()
+		{
+			return await dbContext.Products.CountAsync();
 		}
 
 

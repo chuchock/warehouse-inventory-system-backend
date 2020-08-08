@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +20,8 @@ namespace wisys.Controllers
 
 	[Route("api/warehouses")]
 	[ApiController]
-	[EnableCors(PolicyName = "AllowAll")]
+	//[EnableCors(PolicyName = "AllowAll")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class WarehousesController : ControllerBase
 	{
 		private readonly AppDbContext dbContext;

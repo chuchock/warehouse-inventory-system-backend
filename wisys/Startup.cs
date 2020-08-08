@@ -42,19 +42,22 @@ namespace wisys
 			services.AddDbContext<AppDbContext>(options => options.UseNpgsql(sqlConnectionString));
 
 			//Add Cors Service
-			services.AddCors(options =>
-			{
-				//options.AddPolicy("AllowAPIRequestIO",
-				//	builder => builder.WithOrigins("https://apirequest.io").WithMethods("GET", "POST").AllowAnyHeader());
-				options.AddPolicy("AllowAll",
-						builder =>
-						{
-							builder
-							.AllowAnyOrigin()
-							.AllowAnyMethod()
-							.AllowAnyHeader();
-						});
-			});
+			//services.AddCors(options =>
+			//{
+			//	//options.AddPolicy("AllowAPIRequestIO",
+			//	//	builder => builder.WithOrigins("https://apirequest.io").WithMethods("GET", "POST").AllowAnyHeader());
+			//	options.AddPolicy("AllowAll",
+			//			builder =>
+			//			{
+			//				builder
+			//				.AllowAnyOrigin()
+			//				.AllowAnyMethod()
+			//				.AllowAnyHeader();
+			//			});
+			//});
+			services.AddCors();
+
+
 
 			//Add identity service
 			services.AddIdentity<IdentityUser, IdentityRole>()
@@ -71,7 +74,7 @@ namespace wisys
 							ValidateLifetime = true,
 							ValidateIssuerSigningKey = true,
 							IssuerSigningKey = new SymmetricSecurityKey(
-								Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
+								 Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
 							ClockSkew = TimeSpan.Zero
 						}
 					);
@@ -89,6 +92,13 @@ namespace wisys
 			}
 
 			app.UseRouting();
+
+			// global cors policy
+			app.UseCors(x => x
+				.AllowAnyMethod()
+				.AllowAnyHeader()
+				.SetIsOriginAllowed(origin => true) // allow any origin
+				.AllowCredentials()); // allow credentials
 
 			app.UseAuthorization();
 			app.UseAuthorization();

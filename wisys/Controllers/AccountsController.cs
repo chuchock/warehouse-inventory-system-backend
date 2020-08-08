@@ -73,7 +73,7 @@ namespace wisys.Controllers
 			}
 			else
 			{
-				return BadRequest("Invalid login attempt");
+				return BadRequest(new { message = "Username or password is incorrect" });
 			}
 		}
 
@@ -103,10 +103,10 @@ namespace wisys.Controllers
 
 			claims.AddRange(claimsDB);
 
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["jwt:key"]));
 			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-			var expiration = DateTime.UtcNow.AddMinutes(30);
+			var expiration = DateTime.UtcNow.AddMinutes(15);
 
 			JwtSecurityToken token = new JwtSecurityToken(
 				issuer: null,
