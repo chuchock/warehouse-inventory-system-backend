@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using wisys.Data;
 using wisys.Services;
 
@@ -82,10 +85,45 @@ namespace wisys
 			services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 			services.AddScoped<ICategoryRepository, CategoryRepository>();
 			services.AddScoped<IProductRepository, ProductRepository>();
+
+			//ADD SWAGGER DCOUMENTATION
+			services.AddSwaggerGen(config =>
+			{
+				config.SwaggerDoc("v1", new OpenApiInfo
+				{
+					Version = "v1",
+
+					Title = "wisysAPI",
+					Description = "This is a Web API for WISYS system",
+					//TermsOfService = new Uri(""),
+					License = new OpenApiLicense()
+					{
+						Name = "MIT"
+					},
+					Contact = new OpenApiContact()
+					{
+						Name = "Jesús Montero Cuevas",
+						Email = "jesusmontero.developer@gmail.com"
+						//Url = new Uri("")
+					}
+				});
+
+				// include comments
+				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				config.IncludeXmlComments(xmlPath);
+			});
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
+			// Enable swagger
+			app.UseSwagger();
+			app.UseSwaggerUI(config =>
+			{
+				config.SwaggerEndpoint("/swagger/v1/swagger.json", "MoviesAPI");
+			});
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
