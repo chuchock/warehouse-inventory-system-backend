@@ -19,6 +19,7 @@ namespace wisys.Services
 
 		public async Task AddProductAsync(ProductEntity product)
 		{
+			product.CreationDate = DateTime.Now;
 			await _dbContext.Products.AddAsync(product);
 			await _dbContext.SaveChangesAsync();
 		}

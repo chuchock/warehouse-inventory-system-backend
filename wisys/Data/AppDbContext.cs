@@ -22,6 +22,7 @@ namespace wisys.Data
 		public DbSet<WarehouseEntity> Warehouses { get; set; }
 		public DbSet<CategoryEntity> Categories { get; set; }
 		public DbSet<ProductEntity> Products { get; set; }
-		public DbSet<StorageEntity> Storages { get; set; }
+		public DbSet<SaleEntity> Sales { get; set; }
+		public DbSet<InventoryEntity> Inventories { get; set; }
 	}
 }

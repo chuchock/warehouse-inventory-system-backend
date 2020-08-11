@@ -223,9 +223,40 @@ namespace wisys.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("wisys.Entities.InventoryEntity", b =>
+                {
+                    b.Property<int>("InventoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("InventoryId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("Inventories");
                 });
 
             modelBuilder.Entity("wisys.Entities.ProductEntity", b =>
@@ -238,13 +269,10 @@ namespace wisys.Migrations
                     b.Property<decimal>("BuyPrice")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("CategoryId")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("CategoryId1")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
@@ -253,49 +281,43 @@ namespace wisys.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("SalePrice")
                         .HasColumnType("numeric");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.HasKey("ProductId");
 
-                    b.HasIndex("CategoryId1");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("wisys.Entities.StorageEntity", b =>
+            modelBuilder.Entity("wisys.Entities.SaleEntity", b =>
                 {
-                    b.Property<string>("StorageId")
-                        .HasColumnType("text");
+                    b.Property<int>("SaleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("LastUpdate")
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("SaleDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("PartialQuantity")
+                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ProductId")
-                        .HasColumnType("text");
+                    b.HasKey("SaleId");
 
-                    b.Property<int?>("ProductId1")
-                        .HasColumnType("integer");
+                    b.HasIndex("ProductId");
 
-                    b.Property<string>("WarehouseId")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("WarehouseId1")
-                        .HasColumnType("integer");
-
-                    b.HasKey("StorageId");
-
-                    b.HasIndex("ProductId1");
-
-                    b.HasIndex("WarehouseId1");
-
-                    b.ToTable("Storages");
+                    b.ToTable("Sales");
                 });
 
             modelBuilder.Entity("wisys.Entities.WarehouseEntity", b =>
@@ -310,6 +332,12 @@ namespace wisys.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("WarehouseId");
 
@@ -367,22 +395,37 @@ namespace wisys.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("wisys.Entities.InventoryEntity", b =>
+                {
+                    b.HasOne("wisys.Entities.ProductEntity", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("wisys.Entities.WarehouseEntity", "Warehouse")
+                        .WithMany("Inventories")
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("wisys.Entities.ProductEntity", b =>
                 {
                     b.HasOne("wisys.Entities.CategoryEntity", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId1");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("wisys.Entities.StorageEntity", b =>
+            modelBuilder.Entity("wisys.Entities.SaleEntity", b =>
                 {
                     b.HasOne("wisys.Entities.ProductEntity", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId1");
-
-                    b.HasOne("wisys.Entities.WarehouseEntity", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId1");
+                        .WithMany("Sales")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

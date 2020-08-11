@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace wisys.Entities
 {
-	public class StorageEntity
+	public class InventoryEntity
 	{
 		[Key]
-		public string StorageId { get; set; }
-		public DateTime LastUpdate { get; set; }
-		public int PartialQuantity { get; set; }
-		public string ProductId { get; set; }
+		public int InventoryId { get; set; }
+		public int Quantity { get; set; }
+		public int Status { get; set; }
+		public int ProductId { get; set; }
 		public ProductEntity Product { get; set; }
-		public string WarehouseId { get; set; }
+		public int WarehouseId { get; set; }
 		public WarehouseEntity Warehouse { get; set; }
 	}
 }
