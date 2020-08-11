@@ -121,7 +121,7 @@ namespace wisys
 			app.UseSwagger();
 			app.UseSwaggerUI(config =>
 			{
-				config.SwaggerEndpoint("/swagger/v1/swagger.json", "MoviesAPI");
+				config.SwaggerEndpoint("/swagger/v1/swagger.json", "wisysAPI");
 			});
 
 			if (env.IsDevelopment())

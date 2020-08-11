@@ -58,6 +58,8 @@ namespace wisys.Controllers
 
 		// api/categories/{Id}
 		[HttpGet("{id}", Name = "getCategory")]
+		[ProducesResponseType(400)]// it is possible to return bad request
+		[ProducesResponseType(typeof(CategoryEntity), 200)]
 		public async Task<ActionResult<CategoryEntity>> Get(int id)
 		{
 			var category = await repository.GetCategoryByIdAsync(id);

@@ -45,6 +45,8 @@ namespace wisys.Controllers
 			this.mapper = mapper;
 		}
 
+		[ProducesResponseType(400)]// it is possible to return bad request
+		[ProducesResponseType(typeof(UserToken), 200)]
 		[HttpPost("Create")]
 		public async Task<ActionResult<UserToken>> CreateUser([FromBody] UserInfo model)
 		{
