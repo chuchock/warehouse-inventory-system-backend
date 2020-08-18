@@ -102,7 +102,7 @@ namespace wisys.Controllers
 			return NoContent();
 		}
 
-		
+
 		// api/warehouses/{id}
 		[HttpPatch("{id}")]
 		public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<WarehousePatchDTO> patchDocument)
@@ -146,6 +146,23 @@ namespace wisys.Controllers
 			await repository.DeleteWarehouseAsync(id);
 
 			return NoContent();
+		}
+
+
+		// api/warehouses/{Id}/inventories
+		[HttpGet("{id}/inventories", Name = "getInventoriesById")]
+		public async Task<ActionResult<List<InventoryDTO>>> Get(int id, [FromQuery] PaginationDTO pagination)
+		{
+			var queryable = dbContext.Inventories.Where(s => s.Status == 1 && s.WarehouseId == id)
+						.Include(s => s.Warehouse)
+						.Include(s => s.Product)
+						.AsQueryable();
+
+			await HttpContext.InsertPaginationParametersInResponse(queryable, pagination.RecordsPerPage);
+
+			var inventories = await queryable.Paginate(pagination).ToListAsync();
+
+			return mapper.Map<List<InventoryDTO>>(inventories);
 		}
 	}
 }

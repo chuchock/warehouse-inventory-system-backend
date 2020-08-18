@@ -8,12 +8,12 @@ namespace wisys.Helpers
 	{
 		public AutoMapperProfiles()
 		{
-			//Warehouses
+			// Warehouses
 			CreateMap<WarehouseCreationDTO, WarehouseEntity>();
 			CreateMap<WarehouseEntity, WarehouseDTO>();
 			CreateMap<WarehouseEntity, WarehousePatchDTO>().ReverseMap();
 
-			//Categories
+			// Categories
 			CreateMap<CategoryEntity, CategoryPatchDTO>().ReverseMap();
 			CreateMap<CategoryDTO, CategoryEntity>();
 			CreateMap<CategoryEntity, CategoryCreationDTO>().ReverseMap();
@@ -24,6 +24,10 @@ namespace wisys.Helpers
 			CreateMap<ProductDTO, ProductEntity>();
 			CreateMap<ProductEntity, ProductCreationDTO>().ReverseMap();
 			CreateMap<ProductEntity, ProductDTO>();
+
+			// Inventories
+			CreateMap<InventoryEntity, InventoryDTO>();
+			CreateMap<InventoryCreationDTO, InventoryEntity>();
 		}
 	}
 }
