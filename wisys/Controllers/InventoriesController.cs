@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using wisys.Data;
 using wisys.DTOs;
@@ -66,16 +67,36 @@ namespace wisys.Controllers
 		[HttpPost]
 		public async Task<ActionResult> Post([FromBody] InventoryCreationDTO inventoryCreationDTO)
 		{
-			
-			var inventory = mapper.Map<InventoryEntity>(inventoryCreationDTO);
-			inventory.Status = 1;
+			try
+			{
+				var inventory = mapper.Map<InventoryEntity>(inventoryCreationDTO);
 
-			await dbContext.Inventories.AddAsync(inventory);
-			await dbContext.SaveChangesAsync();
+				// Check if inventory already exists in table
+				var inventoryInTable = dbContext.Inventories
+					.Where(i => i.ProductId == inventory.ProductId && i.WarehouseId == inventory.WarehouseId).FirstOrDefault();
 
-			var inventoryDTO = mapper.Map<InventoryDTO>(inventory);
+				if (inventoryInTable != null)
+				{
+					inventoryInTable.Quantity += inventory.Quantity;
+				}
+				else
+				{
+					inventory.Status = 1;
 
-			return new CreatedAtRouteResult("getInventory", new { id = inventory.InventoryId }, inventoryDTO);
+					await dbContext.Inventories.AddAsync(inventory);
+				}
+
+				await dbContext.SaveChangesAsync();
+
+				var inventoryDTO = mapper.Map<InventoryDTO>(inventory);
+
+				return new CreatedAtRouteResult("getInventory", new { id = inventory.InventoryId }, inventoryDTO);
+
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500);
+			}
 		}
 	}
 }
