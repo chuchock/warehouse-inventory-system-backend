@@ -47,7 +47,7 @@ namespace wisys.Controllers
 
 		[ProducesResponseType(400)]// it is possible to return bad request
 		[ProducesResponseType(typeof(UserToken), 200)]
-		[HttpPost("Create")]
+		[HttpPost("create")]
 		public async Task<ActionResult<UserToken>> CreateUser([FromBody] UserInfo model)
 		{
 			var user = new IdentityUser { UserName = model.EmailAddress, Email = model.EmailAddress };
@@ -63,7 +63,7 @@ namespace wisys.Controllers
 			}
 		}
 
-		[HttpPost("Login")]
+		[HttpPost("login")]
 		public async Task<ActionResult<UserToken>> Login([FromBody] UserInfo model)
 		{
 			var result = await _signInManager.PasswordSignInAsync(model.EmailAddress,
@@ -79,7 +79,7 @@ namespace wisys.Controllers
 			}
 		}
 
-		[HttpPost("RenewToken")]
+		[HttpPost("renewToken")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		public async Task<ActionResult<UserToken>> Renew()
 		{
@@ -125,7 +125,7 @@ namespace wisys.Controllers
 
 		}
 
-		[HttpGet("Users")]
+		[HttpGet("users")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 		public async Task<ActionResult<List<UserDTO>>> Get([FromQuery] PaginationDTO paginationDTO)
 		{
@@ -136,14 +136,14 @@ namespace wisys.Controllers
 			return mapper.Map<List<UserDTO>>(users);
 		}
 
-		[HttpGet("Roles")]
+		[HttpGet("roles")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 		public async Task<ActionResult<List<string>>> GetRoles()
 		{
 			return await context.Roles.Select(x => x.Name).ToListAsync();
 		}
 
-		[HttpPost("AssignRole")]
+		[HttpPost("assignRole")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 		public async Task<ActionResult> AssignRole(EditRoleDTO editRoleDTO)
 		{
@@ -157,7 +157,7 @@ namespace wisys.Controllers
 			return NoContent();
 		}
 
-		[HttpPost("RemoveRole")]
+		[HttpPost("removeRole")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 		public async Task<ActionResult> RemoveRole(EditRoleDTO editRoleDTO)
 		{
