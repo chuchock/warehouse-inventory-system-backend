@@ -19,7 +19,7 @@ namespace wisys.Controllers
 {
 	[Route("api/inventories")]
 	[ApiController]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class InventoriesController : ControllerBase
 	{
 		private readonly AppDbContext dbContext;
@@ -92,6 +92,28 @@ namespace wisys.Controllers
 
 				return new CreatedAtRouteResult("getInventory", new { id = inventory.InventoryId }, inventoryDTO);
 
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500);
+			}
+		}
+
+
+		// api/inventories/{id}/product/{Name}
+		[HttpGet("{id:int?}/product/{name}", Name = "getProductStock")]
+		public async Task<ActionResult<List<ProductStockDTO>>> Get(int? id, string name)
+		{
+			try
+			{
+				var stock = await dbContext.Inventories.Where(i => i.Quantity > 0 && i.Product.Name.ToLower().Contains(name.ToLower()))
+							.Include(p => p.Product)
+							.Include(w => w.Warehouse).ToListAsync();
+
+				if (stock == null)
+					return NotFound();
+
+				return mapper.Map<List<ProductStockDTO>>(stock);
 			}
 			catch (Exception ex)
 			{

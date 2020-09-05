@@ -28,6 +28,7 @@ namespace wisys.Helpers
 			// Inventories
 			CreateMap<InventoryEntity, InventoryDTO>();
 			CreateMap<InventoryCreationDTO, InventoryEntity>();
+			CreateMap<InventoryEntity, ProductStockDTO>();
 		}
 	}
 }
