@@ -29,6 +29,14 @@ namespace wisys.Helpers
 			CreateMap<InventoryEntity, InventoryDTO>();
 			CreateMap<InventoryCreationDTO, InventoryEntity>();
 			CreateMap<InventoryEntity, ProductStockDTO>();
+
+			// Sales
+			CreateMap<SaleCreationDTO, SaleProductEntity>();
+			CreateMap<SaleCreationDTO, SaleProductCreationDTO>();
+			CreateMap<SaleProductCreationDTO, SaleProductEntity>();
+			CreateMap<SaleCreationDTO, SaleProductDTO>();
+			CreateMap<SaleProductDTO, SaleProductEntity>().ReverseMap();
+			CreateMap<SaleEntity, SaleDTO>().ReverseMap();
 		}
 	}
 }
