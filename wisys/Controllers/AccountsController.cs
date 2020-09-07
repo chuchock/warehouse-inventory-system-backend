@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace wisys.Controllers
 {
 	[Route("api/accounts")]
 	[ApiController]
+	[EnableCors("AllowAll")]
 	public class AccountsController : ControllerBase
 	{
 		private readonly UserManager<IdentityUser> _userManager;
@@ -66,16 +68,23 @@ namespace wisys.Controllers
 		[HttpPost("login")]
 		public async Task<ActionResult<UserToken>> Login([FromBody] UserInfo model)
 		{
-			var result = await _signInManager.PasswordSignInAsync(model.EmailAddress,
-				model.Password, isPersistent: false, lockoutOnFailure: false);
+			try
+			{
+				var result = await _signInManager.PasswordSignInAsync(model.EmailAddress,
+					model.Password, isPersistent: false, lockoutOnFailure: false);
 
-			if (result.Succeeded)
-			{
-				return await BuildToken(model);
+				if (result.Succeeded)
+				{
+					return await BuildToken(model);
+				}
+				else
+				{
+					return BadRequest(new { message = "Username or password is incorrect" });
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				return BadRequest(new { message = "Username or password is incorrect" });
+				return StatusCode(500);
 			}
 		}
 

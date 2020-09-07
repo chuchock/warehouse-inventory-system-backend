@@ -40,26 +40,26 @@ namespace wisys
 			//Add automapper service (automapper dependency)
 			services.AddAutoMapper(typeof(Startup));
 
-			var sqlConnectionString = Configuration["ConnectionStrings:PostgreSqlConnectionString"];
+			var sqlConnectionString = Configuration["ConnectionStrings:PostgreSqlConnectionStringProd"];
 
 			services.AddDbContext<AppDbContext>(options => options.UseNpgsql(sqlConnectionString));
 
-			//Add Cors Service
-			//services.AddCors(options =>
-			//{
-			//	//options.AddPolicy("AllowAPIRequestIO",
-			//	//	builder => builder.WithOrigins("https://apirequest.io").WithMethods("GET", "POST").AllowAnyHeader());
-			//	options.AddPolicy("AllowAll",
-			//			builder =>
-			//			{
-			//				builder
-			//				.AllowAnyOrigin()
-			//				.AllowAnyMethod()
-			//				.AllowAnyHeader();
-			//			});
-			//});
-			services.AddCors();
-
+			//////////////////////////////////////////////////////////////
+			// Add Cors Service
+			services.AddCors(options =>
+			{
+				options.AddPolicy("AllowAll",
+						builder =>
+						{
+							builder
+							.AllowAnyOrigin()
+							.AllowAnyMethod()
+							.AllowAnyHeader()
+							.WithExposedHeaders("totalAmountPages") // enable custom header for pagination
+							;
+						});
+			});
+			///////////////////////////////////////////////////////////////
 
 
 			//Add identity service
@@ -132,16 +132,15 @@ namespace wisys
 			app.UseRouting();
 
 			// global cors policy
-			app.UseCors(x => x
-				.AllowAnyMethod()
-				.AllowAnyHeader()
-				.SetIsOriginAllowed(origin => true) // allow any origin
-				.AllowCredentials()); // allow credentials
-
-			app.UseAuthorization();
-			app.UseAuthorization();
-
 			app.UseCors();
+
+
+			app.UseAuthorization();
+			app.UseAuthorization();
+
+			//https
+			app.UseHttpsRedirection();
+
 
 			app.UseEndpoints(endpoints =>
 			{

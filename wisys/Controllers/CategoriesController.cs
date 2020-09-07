@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using wisys.Data;
 using wisys.DTOs;
 using wisys.Entities;
+using wisys.Helpers;
 using wisys.Services;
 
 namespace wisys.Controllers
@@ -20,7 +21,7 @@ namespace wisys.Controllers
 
 	[Route("api/categories")]
 	[ApiController]
-	//[EnableCors(PolicyName = "AllowAll")]
+	[EnableCors("AllowAll")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class CategoriesController : ControllerBase
 	{
@@ -40,11 +41,14 @@ namespace wisys.Controllers
 
 		// api/categories
 		[HttpGet]
-		public async Task<ActionResult<List<CategoryEntity>>> Get()
+		public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] PaginationDTO pagination)
 		{
-			var categories = await repository.GetAllCategoriesAsync();
+			var queryable = dbContext.Categories.AsQueryable();
+			await HttpContext.InsertPaginationParametersInResponse(queryable, pagination.RecordsPerPage);
 
-			return categories;
+			var categories = await queryable.Paginate(pagination).ToListAsync();
+
+			return mapper.Map<List<CategoryDTO>>(categories);
 		}
 
 

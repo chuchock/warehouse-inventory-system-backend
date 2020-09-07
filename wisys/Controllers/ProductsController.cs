@@ -18,7 +18,7 @@ namespace wisys.Controllers
 {
 	[Route("api/products")]
 	[ApiController]
-	//[EnableCors(PolicyName = "AllowAll")]
+	[EnableCors("AllowAll")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class ProductsController : ControllerBase
 	{

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -19,6 +20,7 @@ namespace wisys.Controllers
 {
 	[Route("api/inventories")]
 	[ApiController]
+	[EnableCors("AllowAll")]
 	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class InventoriesController : ControllerBase
 	{
@@ -93,7 +95,7 @@ namespace wisys.Controllers
 				return new CreatedAtRouteResult("getInventory", new { id = inventory.InventoryId }, inventoryDTO);
 
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return StatusCode(500);
 			}

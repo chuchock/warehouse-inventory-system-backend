@@ -20,7 +20,7 @@ namespace wisys.Controllers
 
 	[Route("api/warehouses")]
 	[ApiController]
-	//[EnableCors(PolicyName = "AllowAll")]
+	[EnableCors("AllowAll")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class WarehousesController : ControllerBase
 	{
