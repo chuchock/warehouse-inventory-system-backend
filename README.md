@@ -2,6 +2,9 @@
 
 Backend for a small system for warehouse and inventory management
 
+## API Documentation
+https://wisys20200907112110.azurewebsites.net/swagger/index.html
+
 ### 🛠️ Principal technologies
 
 - [**.NET Core**](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1)
