@@ -21,7 +21,7 @@ namespace wisys.Controllers
 	[Route("api/inventories")]
 	[ApiController]
 	[EnableCors("AllowAll")]
-	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class InventoriesController : ControllerBase
 	{
 		private readonly AppDbContext dbContext;
@@ -39,7 +39,8 @@ namespace wisys.Controllers
 		[HttpGet]
 		public async Task<ActionResult<List<InventoryEntity>>> Get([FromQuery] PaginationDTO pagination)
 		{
-			var queryable = dbContext.Inventories.Where(s => s.Status == 1)
+			var queryable = dbContext.Inventories
+						.Where(s => s.Status == 1)
 						.Include(s => s.Warehouse.Name)
 						.Include(s => s.Product.Name)
 						.AsQueryable();
@@ -56,7 +57,8 @@ namespace wisys.Controllers
 		[HttpGet("{id}", Name = "getInventory")]
 		public async Task<ActionResult<InventoryDTO>> Get(int id)
 		{
-			var inventory = await dbContext.Inventories.Where(s => s.InventoryId == id).FirstOrDefaultAsync();
+			var inventory = await dbContext.Inventories
+			.Where(s => s.InventoryId == id).FirstOrDefaultAsync();
 
 			if (inventory == null)
 				return NotFound();
@@ -108,9 +110,15 @@ namespace wisys.Controllers
 		{
 			try
 			{
-				var stock = await dbContext.Inventories.Where(i => i.Quantity > 0 && i.Product.Name.ToLower().Contains(name.ToLower()))
+				var stock = await dbContext.Inventories
+							.Where(i => i.Quantity > 0
+									&& i.Status == 1
+									&& i.Product.Status == 1
+									&& i.Product.Name.ToLower().Contains(name.ToLower()))
 							.Include(p => p.Product)
-							.Include(w => w.Warehouse).ToListAsync();
+							.Include(w => w.Warehouse)
+							.OrderBy(i => i.Product.Name)
+							.ToListAsync();
 
 				if (stock == null)
 					return NotFound();

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -37,16 +39,25 @@ namespace wisys.Controllers
 
 		// api/products
 		[HttpGet]
-		public async Task<ActionResult<List<ProductEntity>>> Get([FromQuery] PaginationDTO pagination)
+		public async Task<ActionResult<List<ProductDTO>>> Get([FromQuery] PaginationDTO pagination)
 		{
-			var queryable = dbContext.Products.AsQueryable();
-			await HttpContext.InsertPaginationParametersInResponse(queryable, pagination.RecordsPerPage);
+			try
+			{
+				var queryable = dbContext.Products.Where(p => p.Status == 1)
+				.Include(p => p.Category)
+				.OrderBy(p =>p.Name)
+				.AsQueryable();
 
-			var products = await queryable.Paginate(pagination).ToListAsync();
+				await HttpContext.InsertPaginationParametersInResponse(queryable, pagination.RecordsPerPage);
 
-			//var products = await repository.GetAllProductsAsync();
+				var products = await queryable.Paginate(pagination).ToListAsync();
 
-			return products;
+				return mapper.Map<List<ProductDTO>>(products);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
 		}
 
 
@@ -54,7 +65,7 @@ namespace wisys.Controllers
 		[HttpGet("count")]
 		public async Task<ActionResult<int>> Count()
 		{
-			return await dbContext.Products.CountAsync();
+			return await dbContext.Products.Where(p => p.Status == 1).CountAsync();
 		}
 
 
@@ -75,13 +86,22 @@ namespace wisys.Controllers
 		[HttpPost]
 		public async Task<ActionResult> Post([FromBody] ProductCreationDTO productCreationDTO)
 		{
-			var product = mapper.Map<ProductEntity>(productCreationDTO);
+			try
+			{
+				var product = mapper.Map<ProductEntity>(productCreationDTO);
 
-			await repository.AddProductAsync(product);
+				product.Status = 1;
 
-			var productDTO = mapper.Map<ProductDTO>(product);
+				await repository.AddProductAsync(product);
 
-			return new CreatedAtRouteResult("getProduct", new { id = product.ProductId }, productDTO);
+				var productDTO = mapper.Map<ProductDTO>(product);
+
+				return new CreatedAtRouteResult("getProduct", new { id = product.ProductId }, productDTO);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
 		}
 
 

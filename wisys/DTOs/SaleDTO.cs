@@ -10,6 +10,7 @@ namespace wisys.DTOs
 	{
 		public int SaleId { get; set; }
 		public DateTime SaleDate { get; set; }
+		public string formatedDate { get; set; }
 		public int Status { get; set; }
 		public decimal Total { get; set; }
 		public ICollection<SaleProductDTO> SaleProducts { get; set; }

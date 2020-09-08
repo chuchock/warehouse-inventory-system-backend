@@ -33,6 +33,7 @@ namespace wisys.Controllers
 		private readonly AppDbContext context;
 		private readonly IMapper mapper;
 
+
 		public AccountsController(
 			UserManager<IdentityUser> userManager,
 			SignInManager<IdentityUser> signInManager,
@@ -46,6 +47,7 @@ namespace wisys.Controllers
 			this.context = context;
 			this.mapper = mapper;
 		}
+
 
 		[ProducesResponseType(400)]// it is possible to return bad request
 		[ProducesResponseType(typeof(UserToken), 200)]
@@ -64,6 +66,7 @@ namespace wisys.Controllers
 				return BadRequest(result.Errors);
 			}
 		}
+
 
 		[HttpPost("login")]
 		public async Task<ActionResult<UserToken>> Login([FromBody] UserInfo model)
@@ -88,6 +91,7 @@ namespace wisys.Controllers
 			}
 		}
 
+
 		[HttpPost("renewToken")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		public async Task<ActionResult<UserToken>> Renew()
@@ -99,6 +103,7 @@ namespace wisys.Controllers
 
 			return await BuildToken(userInfo);
 		}
+
 
 		private async Task<UserToken> BuildToken(UserInfo userInfo)
 		{
@@ -131,8 +136,8 @@ namespace wisys.Controllers
 				Token = new JwtSecurityTokenHandler().WriteToken(token),
 				Expiration = expiration
 			};
-
 		}
+
 
 		[HttpGet("users")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
@@ -145,12 +150,14 @@ namespace wisys.Controllers
 			return mapper.Map<List<UserDTO>>(users);
 		}
 
+
 		[HttpGet("roles")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 		public async Task<ActionResult<List<string>>> GetRoles()
 		{
 			return await context.Roles.Select(x => x.Name).ToListAsync();
 		}
+
 
 		[HttpPost("assignRole")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
@@ -165,6 +172,7 @@ namespace wisys.Controllers
 			await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, editRoleDTO.RoleName));
 			return NoContent();
 		}
+
 
 		[HttpPost("removeRole")]
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]

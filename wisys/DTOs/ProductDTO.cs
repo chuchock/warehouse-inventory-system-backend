@@ -13,6 +13,6 @@ namespace wisys.DTOs
 		public decimal SalePrice { get; set; }
 		public DateTime Date { get; set; }
 		public string CategoryId { get; set; }
-		public CategoryEntity Category { get; set; }
+		public CategoryDTO Category { get; set; }
 	}
 }

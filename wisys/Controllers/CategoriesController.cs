@@ -43,7 +43,11 @@ namespace wisys.Controllers
 		[HttpGet]
 		public async Task<ActionResult<List<CategoryDTO>>> Get([FromQuery] PaginationDTO pagination)
 		{
-			var queryable = dbContext.Categories.AsQueryable();
+			var queryable = dbContext.Categories
+			.Where(c => c.Status == 1)
+			.OrderBy(c => c.Name)
+			.AsQueryable();
+
 			await HttpContext.InsertPaginationParametersInResponse(queryable, pagination.RecordsPerPage);
 
 			var categories = await queryable.Paginate(pagination).ToListAsync();
@@ -56,7 +60,7 @@ namespace wisys.Controllers
 		[HttpGet("count")]
 		public async Task<ActionResult<int>> Count()
 		{
-			return await dbContext.Categories.CountAsync();
+			return await dbContext.Categories.Where(c => c.Status == 1).CountAsync();
 		}
 
 
@@ -81,13 +85,22 @@ namespace wisys.Controllers
 		[HttpPost]
 		public async Task<ActionResult> Post([FromBody] CategoryCreationDTO categoryCreationDTO)
 		{
-			var category = mapper.Map<CategoryEntity>(categoryCreationDTO);
+			try
+			{
+				var category = mapper.Map<CategoryEntity>(categoryCreationDTO);
 
-			await repository.AddCategoryAsync(category);
+				category.Status = 1;
 
-			var categoryDTO = mapper.Map<CategoryDTO>(category);
+				await repository.AddCategoryAsync(category);
 
-			return new CreatedAtRouteResult("getCategory", new { id = category.CategoryId }, categoryDTO);
+				var categoryDTO = mapper.Map<CategoryDTO>(category);
+
+				return new CreatedAtRouteResult("getCategory", new { id = category.CategoryId }, categoryDTO);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
 		}
 
 

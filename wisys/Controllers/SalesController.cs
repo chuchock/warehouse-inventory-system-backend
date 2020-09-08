@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,7 @@ namespace wisys.Controllers
 	[Route("api/sales")]
 	[ApiController]
 	[EnableCors("AllowAll")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class SalesController : ControllerBase
 	{
 		private readonly AppDbContext dbContext;
@@ -37,6 +40,7 @@ namespace wisys.Controllers
 			var queryable = dbContext.Sales.Where(s => s.Status == 1)
 			.Include(s => s.SaleProducts).ThenInclude(p => p.Product)
 			.Include(s => s.SaleProducts).ThenInclude(p => p.Warehouse)
+			.OrderByDescending(s => s.SaleDate)
 			.AsQueryable();
 
 			await HttpContext.InsertPaginationParametersInResponse(queryable, pagination.RecordsPerPage);
@@ -47,16 +51,25 @@ namespace wisys.Controllers
 
 			// Calculate the total of the sale
 			foreach (var sale in salesDTO)
-			{
+			{	
 				decimal total = 0;
 				foreach (var product in sale.SaleProducts)
 				{
-					total += product.SalePrice;
+					total += (product.SalePrice * product.Quantity);
 				}
 				sale.Total = total;
+				sale.formatedDate = sale.SaleDate.ToString("dd-MM-yyyy HH:mm:ss");
 			}
 
 			return salesDTO;
+		}
+
+
+		// api/sales/count
+		[HttpGet("count")]
+		public async Task<ActionResult<int>> Count()
+		{
+			return await dbContext.SaleProduct.CountAsync();
 		}
 
 

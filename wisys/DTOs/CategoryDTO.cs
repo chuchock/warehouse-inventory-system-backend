@@ -10,6 +10,6 @@ namespace wisys.DTOs
 	{
 		public int CategoryId { get; set; }
 		public string Name { get; set; }
-		public ICollection<ProductEntity> Products { get; set; }
+		//public ICollection<ProductEntity> Products { get; set; }
 	}
 }

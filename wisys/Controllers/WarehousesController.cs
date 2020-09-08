@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -42,7 +43,11 @@ namespace wisys.Controllers
 		[HttpGet]
 		public async Task<ActionResult<List<WarehouseDTO>>> Get([FromQuery] PaginationDTO pagination)
 		{
-			var queryable = dbContext.Warehouses.AsQueryable();
+			var queryable = dbContext.Warehouses
+			.Where(w => w.Status == 1)
+			.OrderBy(w => w.Name)
+			.AsQueryable();
+
 			await HttpContext.InsertPaginationParametersInResponse(queryable, pagination.RecordsPerPage);
 
 			var warehouses = await queryable.Paginate(pagination).ToListAsync();
@@ -55,7 +60,7 @@ namespace wisys.Controllers
 		[HttpGet("count")]
 		public async Task<ActionResult<int>> Count()
 		{
-			return await dbContext.Warehouses.CountAsync();
+			return await dbContext.Warehouses.Where(w => w.Status == 1).CountAsync();
 		}
 
 
@@ -78,13 +83,22 @@ namespace wisys.Controllers
 		[HttpPost]
 		public async Task<ActionResult> Post([FromBody] WarehouseCreationDTO warehouseCreationDTO)
 		{
-			var warehouse = mapper.Map<WarehouseEntity>(warehouseCreationDTO);
+			try
+			{
+				var warehouse = mapper.Map<WarehouseEntity>(warehouseCreationDTO);
 
-			await repository.AddWarehouseAsync(warehouse);
+				warehouse.Status = 1;
 
-			var warehouseDTO = mapper.Map<WarehouseDTO>(warehouse);
+				await repository.AddWarehouseAsync(warehouse);
 
-			return new CreatedAtRouteResult("getWarehouse", new { id = warehouse.WarehouseId }, warehouseDTO);
+				var warehouseDTO = mapper.Map<WarehouseDTO>(warehouse);
+
+				return new CreatedAtRouteResult("getWarehouse", new { id = warehouse.WarehouseId }, warehouseDTO);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
 		}
 
 
