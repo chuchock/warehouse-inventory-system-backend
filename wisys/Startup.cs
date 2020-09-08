@@ -34,15 +34,25 @@ namespace wisys
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			//////////////////////////////////////////////////////////////
+			// Add support for HTTP PATCH
 			services.AddControllers()
-			.AddNewtonsoftJson(); //Add support for HTTP PATCH
+			.AddNewtonsoftJson();
+			/////////////////////////////////////////////////////////////
 
-			//Add automapper service (automapper dependency)
+
+			//////////////////////////////////////////////////////////////
+			// Add automapper service (automapper dependency)
 			services.AddAutoMapper(typeof(Startup));
+			/////////////////////////////////////////////////////////////
 
-			var sqlConnectionString = Configuration["ConnectionStrings:PostgreSqlConnectionStringProd"];
 
+			//////////////////////////////////////////////////////////////
+			// Add DB connection
+			var sqlConnectionString = Configuration["ConnectionStrings:PostgreSqlConnectionString"];
 			services.AddDbContext<AppDbContext>(options => options.UseNpgsql(sqlConnectionString));
+			//////////////////////////////////////////////////////////////
+
 
 			//////////////////////////////////////////////////////////////
 			// Add Cors Service
@@ -62,11 +72,15 @@ namespace wisys
 			///////////////////////////////////////////////////////////////
 
 
+			//////////////////////////////////////////////////////////////
 			//Add identity service
 			services.AddIdentity<IdentityUser, IdentityRole>()
 			.AddEntityFrameworkStores<AppDbContext>()
 			.AddDefaultTokenProviders();
+			/////////////////////////////////////////////////////////////
 
+
+			//////////////////////////////////////////////////////////////
 			//Add authentication service
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 					.AddJwtBearer(options =>
@@ -81,11 +95,15 @@ namespace wisys
 							ClockSkew = TimeSpan.Zero
 						}
 					);
+			/////////////////////////////////////////////////////////////
+
 
 			services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 			services.AddScoped<ICategoryRepository, CategoryRepository>();
 			services.AddScoped<IProductRepository, ProductRepository>();
 
+
+			//////////////////////////////////////////////////////////////
 			//ADD SWAGGER DCOUMENTATION
 			services.AddSwaggerGen(config =>
 			{
@@ -113,6 +131,7 @@ namespace wisys
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 				config.IncludeXmlComments(xmlPath);
 			});
+			///////////////////////////////////////////////////////////
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -124,12 +143,15 @@ namespace wisys
 				config.SwaggerEndpoint("/swagger/v1/swagger.json", "wisysAPI");
 			});
 
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
 			}
 
+
 			app.UseRouting();
+
 
 			// global cors policy
 			app.UseCors();
@@ -137,6 +159,7 @@ namespace wisys
 
 			app.UseAuthorization();
 			app.UseAuthorization();
+
 
 			//https
 			app.UseHttpsRedirection();
