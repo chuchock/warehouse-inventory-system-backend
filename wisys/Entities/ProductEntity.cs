@@ -18,6 +18,5 @@ namespace wisys.Entities
 		public int Status { get; set; }
 		public int CategoryId { get; set; }
 		public CategoryEntity Category { get; set; }
-		public ICollection<SaleEntity> Sales { get; set; }
 	}
 }

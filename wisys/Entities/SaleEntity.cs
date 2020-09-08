@@ -10,10 +10,8 @@ namespace wisys.Entities
 	{
 		[Key]
 		public int SaleId { get; set; }
-		public int Quantity { get; set; }
 		public DateTime SaleDate { get; set; }
 		public int Status { get; set; }
-		public int ProductId { get; set; }
-		public ProductEntity Product { get; set; }
+		public ICollection<SaleProductEntity> SaleProducts { get; set; }
 	}
 }
