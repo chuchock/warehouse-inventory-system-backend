@@ -122,7 +122,8 @@ namespace wisys.Controllers
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["jwt:key"]));
 			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-			var expiration = DateTime.UtcNow.AddMinutes(15);
+			// Set expiration minutes
+			var expiration = DateTime.UtcNow.AddMinutes(60);
 
 			JwtSecurityToken token = new JwtSecurityToken(
 				issuer: null,
