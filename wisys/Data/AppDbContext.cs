@@ -14,11 +14,6 @@ namespace wisys.Data
 		{
 		}
 
-		//protected override void OnModelCreating(ModelBuilder modelBuilder)
-		//{
-		//	base.OnModelCreating(modelBuilder);
-		//}
-
 		public DbSet<WarehouseEntity> Warehouses { get; set; }
 		public DbSet<CategoryEntity> Categories { get; set; }
 		public DbSet<ProductEntity> Products { get; set; }
