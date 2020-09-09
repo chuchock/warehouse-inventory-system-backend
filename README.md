@@ -17,3 +17,7 @@ https://wisys20200907112110.azurewebsites.net/swagger/index.html
 ```
 You need to set up the databe with this command:update-database
 ```
+
+## Client project
+
+https://github.com/chuchock/warehouse-inventory-system-client
